@@ -1,6 +1,5 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
-const argon2 = require('argon2');
 const db = require('../db');
 
 // From passport docs

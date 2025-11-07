@@ -8,6 +8,7 @@ const morgan = require('morgan');
 const session = require('express-session');
 const mySQLStore = require('express-mysql-session')(session);
 const passport = require("passport");
+const cors = require('cors'); //TODO remove once deployed
 
 const entryRouter = require('./routers/entry');
 const loginRouter = require('./routers/login');
@@ -23,6 +24,7 @@ const sessionOptions = {
 };
 
 app.use(helmet());
+app.use(cors()); //TODO remove once deployed
 app.use(morgan('tiny'));
 
 app.use(session({

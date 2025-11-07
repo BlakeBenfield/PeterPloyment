@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import './App.css'
+import '../global.css'
+import Signup from "../features/signup/signup.jsx";
 
 const CounterButton = () => {
     const [count, setCount] = useState(0);
@@ -16,10 +17,7 @@ function App() {
 
   return (
       <>
-          <p className="text-4xl font-bold text-center">
-              Hello world!
-          </p>
-          <CounterButton />
+          <Signup />
       </>
   )
 }

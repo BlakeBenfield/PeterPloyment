@@ -4,10 +4,15 @@ const db = require('../db')
 const {checkAuth} = require("./auth");
 const FormData = require('form-data');
 const Mailgun = require('mailgun.js')
+const validator = require("../schemas/validator");
 
 router.delete('/user', checkAuth, async (req, res) => {
-    await db.query('DELETE FROM users WHERE id = ?', [req.user.id]); //TODO can fail
-    req.status(200);
+    try {
+        await db.query('DELETE FROM users WHERE id = ?', [req.user.id]); //TODO can fail
+        req.status(200);
+    } catch (e) {
+        res.status(500);
+    }
 });
 
 router.post('/user/forgot-password', async (req, res) => {
@@ -27,6 +32,12 @@ router.post('/user/forgot-password', async (req, res) => {
         console.log(e);
     }
     res.status(200).send("Success!");
+});
+
+router.post('/user', async (req, res) => {
+    if (!validator(req.body, 'user')) return res.status(400);
+    await db.query("INSERT INTO users (email, password) VALUES (?, ?)", [req.body.email, req.body.password]);
+    res.status(200);
 });
 
 module.exports = router;

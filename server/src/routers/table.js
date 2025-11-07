@@ -61,6 +61,7 @@ router.post('/table', async (req, res) => {
         sql += ") VALUES (?" + " ?".repeat(params.length - 1) + ")";
 
         await db.query(sql, params);  //TODO MAY RETURN FAILURE
+        return res.status(200);
     } catch (e) {
         return res.status(500);
     }
@@ -89,6 +90,7 @@ router.put('/table/:id', async (req, res) => {
         params += req.params.id;
 
         await db.query(sql, params); //TODO MAY RETURN FAILURE
+        return res.status(200);
     } catch (e) {
         return res.status(500);
     }
@@ -99,6 +101,7 @@ router.delete('table/:id', async (req, res) => {
     if (results.length < 1) return res.status(401);
 
     await db.query("DELETE FROM tables WHERE id = ?", [req.params.id]);
+    return res.status(200);
 });
 
 module.exports = router;

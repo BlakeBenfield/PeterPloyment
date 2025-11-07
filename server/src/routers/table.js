@@ -20,8 +20,7 @@ router.get('/tables', async (req, res) => {
 
 router.get('/table/:id', async (req, res) => {
     try {
-        //TODO CHECK IF USER OWNS TABLE
-        let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ?", [req.params.id]); //TODO MAY RETURN FAILURE
+        let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.params.id, req.user.id]); //TODO MAY RETURN FAILURE
         if (results.length < 1) return res.status(404);
         let table = results[0];
         [results, fields] = await db.query("SELECT * FROM entries WHERE table_id = ?", [req.params.id]);

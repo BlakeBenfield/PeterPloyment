@@ -10,10 +10,8 @@ router.post('/table/:id/entry', async (req, res) => {
     if (!validator(req.body, 'table')) return res.status(400);
     try {
         // Checks if table exists
-        let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ?", [req.query.params.id]);
+        let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.query.params.id, req.user.id]);
         if (results.length < 1) return res.status(404);
-
-        //TODO check if user owns table
 
     } catch (e) {
         return res.status(500);
@@ -80,14 +78,13 @@ router.put('/table/:id/entry/:entryId', async (req, res) => {
     if (!validator(req.body, 'table')) return res.status(400);
     try {
         // Checks if table exists
-        let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ?", [req.query.params.id]);
+        let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.query.params.id, req.user.id]);
         if (results.length < 1) return res.status(404);
 
         // Checks if entry exists
         [results, fields] = await db.query("SELECT * FROM entries WHERE id = ?", [req.query.params.entryId]);
         if (results.length < 1) return res.status(404);
 
-        //TODO check if user owns table
     } catch (e) {
         console.log(e);
         res.status(500);
@@ -151,14 +148,13 @@ router.put('/table/:id/entry/:entryId', async (req, res) => {
 router.delete('/table/:id/entry/:entryId', async (req, res) => {
     try {
         // Checks if table exists
-        let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ?", [req.query.params.id]);
+        let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.query.params.id, req.user.id]);
         if (results.length < 1) return res.status(404);
 
         // Checks if entry exists
         [results, fields] = await db.query("SELECT * FROM entries WHERE id = ?", [req.query.params.entryId]);
         if (results.length < 1) return res.status(404);
 
-        //TODO check if user owns table
     } catch (e) {
         console.log(e);
         res.status(500);

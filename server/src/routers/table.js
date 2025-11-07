@@ -14,14 +14,14 @@ router.get('/tables', async (req, res) => {
         res.status(200).json(results);
     } catch (e) {
         console.log(e);
-        res.status(500);
+        res.status(500).send();
     }
 });
 
 router.get('/table/:id', async (req, res) => {
     try {
         let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.params.id, req.user.id]); //TODO MAY RETURN FAILURE
-        if (results.length < 1) return res.status(404);
+        if (results.length < 1) return res.status(404).send();
         let table = results[0];
         [results, fields] = await db.query("SELECT * FROM entries WHERE table_id = ?", [req.params.id]);
 
@@ -35,13 +35,13 @@ router.get('/table/:id', async (req, res) => {
 
     } catch (e) {
         console.log(e);
-        res.status(500);
+        res.status(500).send();
     }
 });
 
 router.post('/table', async (req, res) => {
     try {
-        if (!validator(req.body, 'table')) return res.status(400);
+        if (!validator(req.body, 'table')) return res.status(400).send();
         const [results, fields] = await db.query("SELECT * FROM tables WHERE user_id = ?", [req.user.id]); //TODO MAY RETURN FAILURE
         if (results > 7) return res.status(400).send("Each user may only have 8 tables max!");
 
@@ -60,17 +60,17 @@ router.post('/table', async (req, res) => {
         sql += ") VALUES (?" + " ?".repeat(params.length - 1) + ")";
 
         await db.query(sql, params);  //TODO MAY RETURN FAILURE
-        return res.status(200);
+        return res.status(200).send();
     } catch (e) {
-        return res.status(500);
+        return res.status(500).send();
     }
 });
 
 router.put('/table/:id', async (req, res) => {
     try {
-        if (!validator(req.body, 'table')) return res.status(400);
+        if (!validator(req.body, 'table')) return res.status(400).send();
         const [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.params.id, req.user.id]); //TODO MAY RETURN FAILURE
-        if (results < 1) return res.status(401);
+        if (results < 1) return res.status(401).send();
 
         let sql = "UPDATE tables SET";
         let params = [];
@@ -83,24 +83,24 @@ router.put('/table/:id', async (req, res) => {
             sql += "color = ?";
             params += req.body.color;
         }
-        if (params.length < 1) return res.status(400);
+        if (params.length < 1) return res.status(400).send();
 
         sql += "WHERE id = ?";
         params += req.params.id;
 
         await db.query(sql, params); //TODO MAY RETURN FAILURE
-        return res.status(200);
+        return res.status(200).send();
     } catch (e) {
-        return res.status(500);
+        return res.status(500).send();
     }
 });
 
 router.delete('table/:id', async (req, res) => {
     const [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.params.id, req.user.id]);
-    if (results.length < 1) return res.status(401);
+    if (results.length < 1) return res.status(401).send();
 
     await db.query("DELETE FROM tables WHERE id = ?", [req.params.id]);
-    return res.status(200);
+    return res.status(200).send();
 });
 
 module.exports = router;

@@ -20,7 +20,7 @@ router.post('/logout', checkAuth, (req, res, next) =>{
 });
 
 router.post('/signup', async (req, res, next) => {
-    if (!validator(req.body, 'user')) return res.status(400);
+    if (!validator(req.body, 'user')) return res.status(400).send();
     const password_hash = await argon2.hash(req.body.password);
     try {
         db.query("INSERT INTO users (email, password) VALUES (?, ?)", [req.body.email, password_hash]); //TODO may return failure

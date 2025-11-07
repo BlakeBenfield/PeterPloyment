@@ -7,14 +7,14 @@ const router = express.Router();
 router.use(checkAuth);
 
 router.post('/table/:id/entry', async (req, res) => {
-    if (!validator(req.body, 'table')) return res.status(400);
+    if (!validator(req.body, 'table')) return res.status(400).send();
     try {
         // Checks if table exists
         let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.query.params.id, req.user.id]);
-        if (results.length < 1) return res.status(404);
+        if (results.length < 1) return res.status(404).send();
 
     } catch (e) {
-        return res.status(500);
+        return res.status(500).send();
     }
 
     let sql = "INSERT INTO tables (";
@@ -60,34 +60,34 @@ router.post('/table/:id/entry', async (req, res) => {
         params += req.body.preference;
     }
 
-    if (params < 1) return res.status(400);
+    if (params < 1) return res.status(400).send();
     sql.substring(0, sql.length -2);
     sql += ") VALUES (" + "?, ".repeat(params.length -1) + "?)";
 
     try {
         await db.query(sql, params); //TODO may return failure
-        res.status(200);
+        res.status(200).send();
     } catch (e) {
         console.log(e);
-        return res.status(500);
+        return res.status(500).send();
     }
 
 });
 
 router.put('/table/:id/entry/:entryId', async (req, res) => {
-    if (!validator(req.body, 'table')) return res.status(400);
+    if (!validator(req.body, 'table')) return res.status(400).send();
     try {
         // Checks if table exists
         let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.query.params.id, req.user.id]);
-        if (results.length < 1) return res.status(404);
+        if (results.length < 1) return res.status(404).send();
 
         // Checks if entry exists
         [results, fields] = await db.query("SELECT * FROM entries WHERE id = ?", [req.query.params.entryId]);
-        if (results.length < 1) return res.status(404);
+        if (results.length < 1) return res.status(404).send();
 
     } catch (e) {
         console.log(e);
-        res.status(500);
+        res.status(500).send();
     }
 
     let sql = "UPDATE entries SET ";
@@ -133,15 +133,15 @@ router.put('/table/:id/entry/:entryId', async (req, res) => {
         params += req.body.preference;
     }
 
-    if (params.length < 1) return res.status(400);
+    if (params.length < 1) return res.status(400).send();
     sql += "WHERE id = ?";
     params += req.params.entryId;
 
     try {
         await db.query(sql, params); //TODO may return failure
-        res.status(200);
+        res.status(200).send();
     } catch (e) {
-        return res.status(500);
+        return res.status(500).send();
     }
 });
 
@@ -149,19 +149,19 @@ router.delete('/table/:id/entry/:entryId', async (req, res) => {
     try {
         // Checks if table exists
         let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.query.params.id, req.user.id]);
-        if (results.length < 1) return res.status(404);
+        if (results.length < 1) return res.status(404).send();
 
         // Checks if entry exists
         [results, fields] = await db.query("SELECT * FROM entries WHERE id = ?", [req.query.params.entryId]);
-        if (results.length < 1) return res.status(404);
+        if (results.length < 1) return res.status(404).send();
 
     } catch (e) {
         console.log(e);
-        res.status(500);
+        res.status(500).send();
     }
 
     await db.query('DELETE FROM entries WHERE id = ?', [req.params.entryId]); //TODO may return failure
-    res.status(200);
+    res.status(200).send();
 });
 
 module.exports = router;

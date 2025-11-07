@@ -31,7 +31,7 @@ ALTER TABLE
 CREATE TABLE `users`(
                         `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                         `email` VARCHAR(255) NOT NULL,
-                        `password` VARCHAR(64) NOT NULL,
+                        `password` VARCHAR(97) NOT NULL,
                         `date-created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 ALTER TABLE

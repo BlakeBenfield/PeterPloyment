@@ -3,3 +3,11 @@
 body {
     background-color: #191919;
 }
+
+@theme {
+    --color-fieldColor: #333333;
+    --color-fieldRing: #707070;
+    --color-baseColor: #6736cc;
+    --color-errorFill: rgba(255, 22, 22, 0.7);
+    --color-errorRing: #ff3333;
+}

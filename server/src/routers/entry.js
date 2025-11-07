@@ -4,9 +4,7 @@ const validator = require('../schemas/validator');
 const express = require('express');
 const router = express.Router();
 
-router.use(checkAuth);
-
-router.post('/table/:id/entry', async (req, res) => {
+router.post('/table/:id/entry', checkAuth, async (req, res) => {
     if (!validator(req.body, 'table')) return res.status(400).send();
     try {
         // Checks if table exists
@@ -74,7 +72,7 @@ router.post('/table/:id/entry', async (req, res) => {
 
 });
 
-router.put('/table/:id/entry/:entryId', async (req, res) => {
+router.put('/table/:id/entry/:entryId', checkAuth, async (req, res) => {
     if (!validator(req.body, 'table')) return res.status(400).send();
     try {
         // Checks if table exists
@@ -145,7 +143,7 @@ router.put('/table/:id/entry/:entryId', async (req, res) => {
     }
 });
 
-router.delete('/table/:id/entry/:entryId', async (req, res) => {
+router.delete('/table/:id/entry/:entryId', checkAuth, async (req, res) => {
     try {
         // Checks if table exists
         let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.query.params.id, req.user.id]);

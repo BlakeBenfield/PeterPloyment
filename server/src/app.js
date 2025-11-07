@@ -31,10 +31,10 @@ app.use(session({
     saveUninitialized: false,
     store: new mySQLStore(sessionOptions)
 }));
-app.use(passport.authenticate('session'));
 
-app.use(express.json());
 app.use(express.static('./public', { extensions: ['html'] }));
+app.use(passport.authenticate('session'));
+app.use(express.json());
 
 app.use(entryRouter);
 app.use(loginRouter);

@@ -4,9 +4,7 @@ const {checkAuth} = require("./auth");
 const express = require('express');
 const router = express.Router();
 
-router.use(checkAuth);
-
-router.get('/tables', async (req, res) => {
+router.get('/tables', checkAuth, async (req, res) => {
     try {
         const [results, fields] = await db.query("SELECT * FROM tables WHERE user_id = ?", [req.user.id]);
         if (results.length < 1) return res.status(404).send("No tables found!");
@@ -18,7 +16,7 @@ router.get('/tables', async (req, res) => {
     }
 });
 
-router.get('/table/:id', async (req, res) => {
+router.get('/table/:id', checkAuth, async (req, res) => {
     try {
         let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.params.id, req.user.id]); //TODO MAY RETURN FAILURE
         if (results.length < 1) return res.status(404).send();
@@ -39,7 +37,7 @@ router.get('/table/:id', async (req, res) => {
     }
 });
 
-router.post('/table', async (req, res) => {
+router.post('/table', checkAuth, async (req, res) => {
     try {
         if (!validator(req.body, 'table')) return res.status(400).send();
         const [results, fields] = await db.query("SELECT * FROM tables WHERE user_id = ?", [req.user.id]); //TODO MAY RETURN FAILURE
@@ -66,7 +64,7 @@ router.post('/table', async (req, res) => {
     }
 });
 
-router.put('/table/:id', async (req, res) => {
+router.put('/table/:id', checkAuth, async (req, res) => {
     try {
         if (!validator(req.body, 'table')) return res.status(400).send();
         const [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.params.id, req.user.id]); //TODO MAY RETURN FAILURE
@@ -95,7 +93,7 @@ router.put('/table/:id', async (req, res) => {
     }
 });
 
-router.delete('table/:id', async (req, res) => {
+router.delete('table/:id', checkAuth, async (req, res) => {
     const [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.params.id, req.user.id]);
     if (results.length < 1) return res.status(401).send();
 

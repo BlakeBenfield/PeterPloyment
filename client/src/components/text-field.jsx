@@ -1,9 +1,17 @@
 import '../global.css'
 
-const TextField = ({placeHolder}) => {
+const TextField = ({fname, placeHolder, secret, fValue, submissionCB, changeCB}) => {
     return (
         <>
-            <input className={"text-white text-2xl bg-[#333333] rounded-xl pl-5 pt-2 pb-2 w-80 ring-[#4a4a4a] ring-1 m-0"} id={"field"} type={"text"} placeholder={placeHolder}/>
+            <input className={"text-white text-2xl bg-fieldColor rounded-xl pl-5 pt-2 pb-2 w-80 ring-fieldRing ring-1 m-0"}
+                   name={fname ? fname : placeHolder}
+                   id={"field"}
+                   type={secret ? "password": "text"}
+                   placeholder={placeHolder}
+                   value ={fValue}
+                   onKeyUp={e => { if (e.key === 'Enter') submissionCB(e)}}
+                   onChange={changeCB}
+            />
         </>
     )
 }

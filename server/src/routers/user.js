@@ -34,10 +34,4 @@ router.post('/user/forgot-password', async (req, res) => {
     res.status(200).send();
 });
 
-router.post('/user', async (req, res) => {
-    if (!validator(req.body, 'user')) return res.status(400).send();
-    await db.query("INSERT INTO users (email, password) VALUES (?, ?)", [req.body.email, req.body.password]);
-    res.status(200).send();
-});
-
 module.exports = router;

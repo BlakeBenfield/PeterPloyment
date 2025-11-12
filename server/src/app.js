@@ -1,4 +1,5 @@
 require('dotenv').config()
+const path = require('path')
 const express = require('express');
 const app = express();
 const port = process.env.SV_PORT || 3000;
@@ -8,7 +9,6 @@ const morgan = require('morgan');
 const session = require('express-session');
 const mySQLStore = require('express-mysql-session')(session);
 const passport = require("passport");
-const cors = require('cors'); //TODO remove once deployed
 
 const entryRouter = require('./routers/entry');
 const loginRouter = require('./routers/login');
@@ -24,7 +24,6 @@ const sessionOptions = {
 };
 
 app.use(helmet());
-app.use(cors()); //TODO remove once deployed
 app.use(morgan('tiny'));
 
 app.use(session({
@@ -34,14 +33,19 @@ app.use(session({
     store: new mySQLStore(sessionOptions)
 }));
 
-app.use(express.static('./public', { extensions: ['html'] }));
+app.use(express.static('./public'));
 app.use(passport.authenticate('session'));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use(entryRouter);
 app.use(loginRouter);
 app.use(tableRouter);
 app.use(userRouter);
+
+app.all('/{*any}', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public', 'index.html'));
+});
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);

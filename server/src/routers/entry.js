@@ -8,10 +8,11 @@ router.post('/table/:id/entry', checkAuth, async (req, res) => {
     if (!validator(req.body, 'table')) return res.status(400).send();
     try {
         // Checks if table exists
-        let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.query.params.id, req.user.id]);
+        let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.params.id, req.user.id]);
         if (results.length < 1) return res.status(404).send();
 
     } catch (e) {
+        console.log(e);
         return res.status(500).send();
     }
 
@@ -30,17 +31,20 @@ router.post('/table/:id/entry', checkAuth, async (req, res) => {
 
     if (req.body.application_open) {
         sql += "application_open, ";
-        params += req.body.application_open;
+        let str = req.body.application_open;
+        params += str.substring(6,10) + '-' + str.substring(0,2) + '-' + str.substring(3,5);
     }
 
     if (req.body.application_close) {
         sql += "application_close, ";
-        params += req.body.application_close;
+        let str = req.body.application_close;
+        params += str.substring(6,10) + '-' + str.substring(0,2) + '-' + str.substring(3,5);
     }
 
     if (req.body.application_date) {
         sql += "application_date, ";
-        params += req.body.application_date;
+        let str = req.body.application_date;
+        params += str.substring(6,10) + '-' + str.substring(0,2) + '-' + str.substring(3,5);
     }
 
     if (req.body.status) {

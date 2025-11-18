@@ -5,8 +5,8 @@ const Note = ({value, isShown, changeCB, UIOpenedCB}) => {
     // value={value}
     return (
         <div>
-            <div className={`${isShown ? "" : "hidden" } z-5 flex items-center justify-center w-screen h-screen`}>
-                <div className={`w-4/5 h-4/5`}>
+            <div className={`${isShown ? "" : "hidden" } fixed pointer-events-none z-5 flex items-center justify-center w-screen h-screen`}>
+                <div className={`w-4/5 h-4/5 pointer-events-auto`}>
                     <div className={"relative"}>
                         <button className={"absolute w-full h-full cursor-pointer"} onClick={UIOpenedCB}>
                             <XIcon className={"w-5 h-5 fill-white absolute top-1 right-1 m-1"}/>

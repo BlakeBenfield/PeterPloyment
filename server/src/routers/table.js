@@ -87,19 +87,20 @@ router.put('/table/:id', checkAuth, async (req, res) => {
         const [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.params.id, req.user.id]); //TODO MAY RETURN FAILURE
         if (results < 1) return res.status(401).send();
 
-        let sql = "UPDATE tables SET";
+        let sql = "UPDATE tables SET ";
         let params = [];
 
         if (req.body.name) {
-            sql += "name = ?";
+            sql += "name = ?, ";
             params.push(req.body.name);
         }
         if (req.body.color) {
-            sql += "color = ?";
+            sql += "color = ?, ";
             params.push(req.body.color);
         }
-        if (params.length < 1) return res.status(400).send();
 
+        sql = sql.substring(0, sql.length - 2); // removes last comma
+        if (params.length < 1) return res.status(400).send();
         sql += "WHERE id = ?";
         params.push(req.params.id);
 

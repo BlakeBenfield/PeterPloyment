@@ -96,47 +96,48 @@ router.put('/table/:id/entry/:entryId', checkAuth, async (req, res) => {
     let params = [];
 
     if (req.body.company) {
-        sql += "company = ? ";
+        sql += "company = ?, ";
         params.push(req.body.company);
     }
 
     if (req.body.title) {
-        sql += "title = ? ";
+        sql += "title = ?, ";
         params.push(req.body.title);
     }
 
     if (req.body.application_open) {
-        sql += "application_open = ? ";
+        sql += "application_open = ?, ";
         params.push(req.body.application_open);
     }
 
     if (req.body.application_close) {
-        sql += "application_close = ? ";
+        sql += "application_close = ?, ";
         params.push(req.body.application_close);
     }
 
     if (req.body.application_date) {
-        sql += "application_date = ? ";
+        sql += "application_date = ?, ";
         params.push(req.body.application_date);
     }
 
     if (req.body.status) {
-        sql += "status = ? ";
+        sql += "status = ?, ";
         params.push(req.body.status);
     }
 
     if (req.body.preference) {
-        sql += "preference = ? ";
+        sql += "preference = ?, ";
         params.push(req.body.preference);
     }
 
     if (req.body.notes) {
-        sql += "notes = ? ";
+        sql += "notes = ?, ";
         params.push(req.body.preference);
     }
 
+    sql = sql.substring(0, sql.length - 2); // removes last comma
     if (params.length < 1) return res.status(400).send();
-    sql += "WHERE id = ?";
+    sql += " WHERE id = ?";
     params.push(req.params.entryId);
 
     try {

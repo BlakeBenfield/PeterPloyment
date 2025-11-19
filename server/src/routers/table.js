@@ -24,19 +24,19 @@ router.get('/table/:id', checkAuth, async (req, res) => {
         [results, fields] = await db.query("SELECT * FROM entries WHERE table_id = ?", [req.params.id]);
         results.forEach((entry, index, arr) => {
             let currDate = new Date(entry.application_open);
-            entry.application_open = (currDate.getMonth() < 10 ? ("0" + currDate.getMonth() ) : currDate.getMonth()) + '-' +
-                                     (currDate.getDate() < 10 ? ("0" + currDate.getDate() ) : currDate.getDate()) + '-' +
-                                     (currDate.getFullYear() < 10 ? ("0" + currDate.getFullYear() ) : currDate.getFullYear());
+            entry.application_open = (currDate.getFullYear() < 10 ? ("0" + currDate.getFullYear() ) : currDate.getFullYear()) + '-' +
+                                     (currDate.getMonth() < 10 ? ("0" + currDate.getMonth() + 1 ) : currDate.getMonth() + 1) + '-' +
+                                     (currDate.getDate() < 10 ? ("0" + currDate.getDate() ) : currDate.getDate());
 
             currDate = new Date(entry.application_close);
-            entry.application_close = (currDate.getMonth() < 10 ? ("0" + currDate.getMonth() ) : currDate.getMonth()) + '-' +
-                                      (currDate.getDate() < 10 ? ("0" + currDate.getDate() ) : currDate.getDate()) + '-' +
-                                      (currDate.getFullYear() < 10 ? ("0" + currDate.getFullYear() ) : currDate.getFullYear());
+            entry.application_close = (currDate.getFullYear() < 10 ? ("0" + currDate.getFullYear() ) : currDate.getFullYear()) + '-' +
+                                      (currDate.getMonth() < 10 ? ("0" + currDate.getMonth() + 1 ) : currDate.getMonth() + 1) + '-' +
+                                      (currDate.getDate() < 10 ? ("0" + currDate.getDate() ) : currDate.getDate());
 
             currDate = new Date(entry.application_date);
-            entry.application_date = (currDate.getMonth() < 10 ? ("0" + currDate.getMonth() ) : currDate.getMonth()) + '-' +
-                                     (currDate.getDate() < 10 ? ("0" + currDate.getDate() ) : currDate.getDate()) + '-' +
-                                     (currDate.getFullYear() < 10 ? ("0" + currDate.getFullYear() ) : currDate.getFullYear());
+            entry.application_date = (currDate.getFullYear() < 10 ? ("0" + currDate.getFullYear() ) : currDate.getFullYear()) + '-' +
+                                     (currDate.getMonth() < 10 ? ("0" + currDate.getMonth() + 1) : currDate.getMonth() + 1) + '-' +
+                                     (currDate.getDate() < 10 ? ("0" + currDate.getDate() ) : currDate.getDate());
             arr[index] = entry;
         });
         res.status(200).json({
@@ -65,11 +65,11 @@ router.post('/table', checkAuth, async (req, res) => {
 
         if (req.body.name) {
             sql += ", name";
-            params += req.body.name;
+            params.push(req.body.name);
         }
         if (req.body.color) {
             sql += ", color";
-            params += req.body.color;
+            params.push(req.body.color);
         }
 
         sql += ") VALUES (?" + " ?".repeat(params.length - 1) + ")";
@@ -92,16 +92,16 @@ router.put('/table/:id', checkAuth, async (req, res) => {
 
         if (req.body.name) {
             sql += "name = ?";
-            params += req.body.name;
+            params.push(req.body.name);
         }
         if (req.body.color) {
             sql += "color = ?";
-            params += req.body.color;
+            params.push(req.body.color);
         }
         if (params.length < 1) return res.status(400).send();
 
         sql += "WHERE id = ?";
-        params += req.params.id;
+        params.push(req.params.id);
 
         await db.query(sql, params); //TODO MAY RETURN FAILURE
         return res.status(200).send();

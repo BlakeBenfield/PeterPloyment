@@ -1,6 +1,7 @@
 import Row from "./row/row.jsx";
 import {useEffect, useState} from "react";
 import {useRef} from "react";
+import AddIcon from '../../../assets/add.svg?react'
 
 const Table = ({id}) => {
     const [tableData, setTableData] = useState({name: "", id:-1, color: "", currSelection: {rowId: -1, name: ""}, entries: []});
@@ -14,14 +15,19 @@ const Table = ({id}) => {
     }
 
     const startSaveLoop = () => {
-        // TODO check if item fails, try 3 times, prompt user afterwards
+        // TODO check if item fails, try 3 times, prompt user afterwards, NOT ON 400 res, client fault (eg. updated date by
         const interval = setInterval(async () => {
             try {
                 let queue = pendingSaves.current;
                 pendingSaves.current = [];
                 if (queue.length < 1) return;
                 for (let i = 0; i < queue.length; i++) {
-                    let updatedObj = JSON.stringify(tableRef.current.entries[queue[i].rowId])
+                    let updatedObj = JSON.stringify(tableRef.current.entries[queue[i].rowId], (key, value) => {
+                        console.log(key, value);
+                        if (value === '') return null;
+                        return value;
+                    });
+
                     const result = await fetch(`http://localhost:3000/table/${id}/entry/${queue[i].id}`, {
                         method: "PUT",
                         body: updatedObj,
@@ -73,26 +79,33 @@ const Table = ({id}) => {
     }
 
     return (
-        <div className={"text-white flex flex-col"}>
-            <p>Name: {tableData.name}</p>
-            <p>Color: {tableData.color}</p>
-            {tableData.entries.map((entry, index) => {
-            return (<Row
-                 rowId={index}
-                 changeCB={onChange}
-                 uiSelectionCB={onMenuSelection}
-                 company={entry.company}
-                 title={entry.title}
-                 status={entry.status}
-                 app_apply={entry.application_date}
-                 app_open={entry.application_open}
-                 app_close={entry.application_close}
-                 notes={entry.notes}
-                 preference={entry.preference}
-                 id={entry.id}
-                 currSelection={tableData.currSelection}
-                         />)
-        })}
+        <div className={"flex items-center justify-center w-screen"}>
+            <div className={"text-white flex flex-col w-4/5"}>
+                <p>Name: {tableData.name}</p>
+                <p>Color: {tableData.color}</p>
+                {tableData.entries.map((entry, index) => {
+                return (
+                    <div className={"flex row justify-start"}>
+                        <Row
+                         rowId={index}
+                         changeCB={onChange}
+                         uiSelectionCB={onMenuSelection}
+                         company={entry.company}
+                         title={entry.title}
+                         status={entry.status}
+                         app_apply={entry.application_date}
+                         app_open={entry.application_open}
+                         app_close={entry.application_close}
+                         notes={entry.notes}
+                         preference={entry.preference}
+                         id={entry.id}
+                         currSelection={tableData.currSelection}
+                         />
+                        <AddIcon className={"w-5 h-5"} />
+                    </div>
+                        )
+            })}
+            </div>
         </div>
     )
 }

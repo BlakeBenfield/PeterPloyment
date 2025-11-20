@@ -10,5 +10,5 @@ body {
     --color-baseColor: #6736cc;
     --color-errorFill: rgba(255, 22, 22, 0.7);
     --color-errorRing: #ff3333;
-    --cellWidth: calc(var(--spacing) * 45);
+    --cellWidth: calc(var(--spacing) * 50);
 }

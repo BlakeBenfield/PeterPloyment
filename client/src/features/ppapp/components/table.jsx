@@ -2,6 +2,7 @@ import Row from "./row/row.jsx";
 import {useEffect, useState} from "react";
 import {useRef} from "react";
 import AddIcon from '../../../assets/add.svg?react'
+import TrashIcon from '../../../assets/trash.svg?react'
 
 const Table = ({id}) => {
     const [tableData, setTableData] = useState({name: "", id:-1, color: "", currSelection: {rowId: -1, name: ""}, entries: []});
@@ -23,7 +24,6 @@ const Table = ({id}) => {
                 if (queue.length < 1) return;
                 for (let i = 0; i < queue.length; i++) {
                     let updatedObj = JSON.stringify(tableRef.current.entries[queue[i].rowId], (key, value) => {
-                        console.log(key, value);
                         if (value === '') return null;
                         return value;
                     });
@@ -78,16 +78,24 @@ const Table = ({id}) => {
         });
     }
 
-    const TableControlsFooter = () => {
-        const addRow = async () => {
-            await fetch(`http://localhost:3000/table/${id}/entry`, {
-                method: "POST",
-                headers: [["Content-Type", "application/json"]],
-                body: `{\"table_id\":${id}}`
-            });
-            await getData();
-        }
+    const addRow = async () => {
+        await fetch(`http://localhost:3000/table/${id}/entry`, {
+            method: "POST",
+            headers: [["Content-Type", "application/json"]],
+            body: `{\"table_id\":${id}}`
+        });
+        await getData();
+    }
 
+    const deleteRow = async (e) => {
+        console.log(e.target.entryId);
+        await fetch(`http://localhost:3000/table/${id}/entry/${e.target.entryId}`, {
+            method: "DELETE"
+        });
+        await getData();
+    }
+
+    const TableControlsFooter = () => {
         return (
             <div className={"flex w-full items-center"}>
                 <div className={"flex flex-row items-start"} onClick={addRow}>
@@ -99,6 +107,15 @@ const Table = ({id}) => {
 
     }
 
+    const TrashButtonIcon = ({className, entryId, CB}) => {
+        const handleClick = (e) => {
+            e.target.entryId = entryId;
+            CB(e);
+        }
+        return (
+            <TrashIcon className={className} onClick={handleClick}/>
+        )
+    }
     return (
         <div className={"flex items-center justify-center w-screen"}>
             <div className={"text-white flex flex-col w-4/5"}>
@@ -106,6 +123,7 @@ const Table = ({id}) => {
                 <p>Color: {tableData.color}</p>
                 {tableData.entries.map((entry, index) => {
                 return (
+                    <div className={"flex row justify-start"}>
                         <Row
                          rowId={index}
                          changeCB={onChange}
@@ -121,6 +139,8 @@ const Table = ({id}) => {
                          id={entry.id}
                          currSelection={tableData.currSelection}
                          />
+                        <TrashButtonIcon className={"w-5 h-5"} entryId={entry.id} CB={deleteRow}/>
+                    </div>
                         )
             })}
                 <TableControlsFooter />

@@ -23,20 +23,27 @@ router.get('/table/:id', checkAuth, async (req, res) => {
         let table = results[0];
         [results, fields] = await db.query("SELECT * FROM entries WHERE table_id = ?", [req.params.id]);
         results.forEach((entry, index, arr) => {
-            let currDate = new Date(entry.application_open);
-            entry.application_open = (currDate.getFullYear() < 10 ? ("0" + currDate.getFullYear() ) : currDate.getFullYear()) + '-' +
-                                     (currDate.getMonth() < 10 ? ("0" + currDate.getMonth() + 1 ) : currDate.getMonth() + 1) + '-' +
-                                     (currDate.getDate() < 10 ? ("0" + currDate.getDate() ) : currDate.getDate());
+            let currDate;
+            if (entry.application_open) {
+                currDate = new Date(entry.application_open);
+                entry.application_open = (String(currDate.getFullYear()).padStart(4, '0')) + '-' +
+                                         (String(currDate.getMonth() + 1).padStart(2, '0')) + '-' +
+                                         (String(currDate.getDate()).padStart(2, '0'));
+            }
 
-            currDate = new Date(entry.application_close);
-            entry.application_close = (currDate.getFullYear() < 10 ? ("0" + currDate.getFullYear() ) : currDate.getFullYear()) + '-' +
-                                      (currDate.getMonth() < 10 ? ("0" + currDate.getMonth() + 1 ) : currDate.getMonth() + 1) + '-' +
-                                      (currDate.getDate() < 10 ? ("0" + currDate.getDate() ) : currDate.getDate());
+            if (entry.application_close) {
+                currDate = new Date(entry.application_close);
+                entry.application_close = (String(currDate.getFullYear()).padStart(4, '0')) + '-' +
+                                          (String(currDate.getMonth() + 1).padStart(2, '0')) + '-' +
+                                          (String(currDate.getDate()).padStart(2, '0'));
+            }
 
-            currDate = new Date(entry.application_date);
-            entry.application_date = (currDate.getFullYear() < 10 ? ("0" + currDate.getFullYear() ) : currDate.getFullYear()) + '-' +
-                                     (currDate.getMonth() < 10 ? ("0" + currDate.getMonth() + 1) : currDate.getMonth() + 1) + '-' +
-                                     (currDate.getDate() < 10 ? ("0" + currDate.getDate() ) : currDate.getDate());
+            if (entry.application_date) {
+                currDate = new Date(entry.application_date);
+                entry.application_date = (String(currDate.getFullYear()).padStart(4, '0')) + '-' +
+                                         (String(currDate.getMonth() + 1).padStart(2, '0')) + '-' +
+                                         (String(currDate.getDate()).padStart(2, '0'));
+            }
             arr[index] = entry;
         });
         res.status(200).json({

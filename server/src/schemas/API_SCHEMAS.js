@@ -20,7 +20,7 @@ tableSchema = {
     "type": "object",
     "properties": {
         "name": {
-            "type": "string",
+            "type": ["string", "null"],
             "minLength": 1,
             "maxLength": 32
         },
@@ -36,48 +36,53 @@ tableSchema = {
 entrySchema = {
     "type": "object",
     "properties": {
+        "table_id": {
+            "type": "integer",
+            "minimum": 0
+        },
         "company": {
-            "type": "string",
+            "type": ["string", "null"],
             "minLength": 1,
             "maxLength": 32
         },
         "title": {
-            "type": "string",
+            "type": ["string", "null"],
             "minLength": 1,
             "maxLength": 32
         },
         "application_open": {
-            "type": "string",
+            "type": ["string", "null"],
             "minLength": 10,
             "maxLength": 10,
             "pattern": "^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})$"
         },
         "application_close": {
-            "type": "string",
+            "type": ["string", "null"],
             "minLength": 10,
             "maxLength": 10,
             "pattern": "^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})$"
         },
         "application_date": {
-            "type": "string",
+            "type": ["string", "null"],
             "minLength": 10,
             "maxLength": 10,
             "pattern": "^([0-9]{4})-([0-9]{1,2})-([0-9]{1,2})$"
         },
         "status": {
-            "type": "string",
-            "enum": ["Unavailable", "Not applied", "Applied", "Rejected", "Accepted", "In-progress"]
+            "type": ["string", "null"],
+            "enum": ["Unavailable", "Not applied", "Applied", "Rejected", "Accepted", "In-progress", null]
         },
         "preference": {
-            "type": "string",
-            "enum": ["Perfect", "Great", "Good", "Ok", "Unfavorable", "Bad", "Terrible"]
+            "type": ["string", "null"],
+            "enum": ["Perfect", "Great", "Good", "Ok", "Unfavorable", "Bad", "Terrible", null]
         },
         "notes": {
-            "type": "string",
+            "type": ["string", "null"],
             "minLength": 0,
             "maxLength": 6000
         }
-    }
+    },
+    "required": ["table_id"]
 }
 
 module.exports = {userSchema, tableSchema, entrySchema}

@@ -157,11 +157,11 @@ router.put('/table/:id/entry/:entryId', checkAuth, async (req, res) => {
 router.delete('/table/:id/entry/:entryId', checkAuth, async (req, res) => {
     try {
         // Checks if table exists
-        let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.query.params.id, req.user.id]);
+        let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.params.id, req.user.id]);
         if (results.length < 1) return res.status(404).send();
 
         // Checks if entry exists
-        [results, fields] = await db.query("SELECT * FROM entries WHERE id = ?", [req.query.params.entryId]);
+        [results, fields] = await db.query("SELECT * FROM entries WHERE id = ?", [req.params.entryId]);
         if (results.length < 1) return res.status(404).send();
 
     } catch (e) {

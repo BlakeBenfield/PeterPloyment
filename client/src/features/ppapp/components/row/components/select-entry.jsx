@@ -31,7 +31,7 @@ const SelectEntry = ({name, value, options, isShown, changeCB, UIOpenedCB}) => {
     return (
         <div>
             <div>
-                <button onClick={handleUIOpen} title={"Select"} className={"h-7 w-60 flex justify-center items-center bg-fieldColor border-gray-400 border-1"}>
+                <button onClick={handleUIOpen} title={"Select"} className={"h-7 w-[var(--cellWidth)] flex justify-center items-center bg-fieldColor border-gray-400 border-1"}>
                     <Option value={value}/>
                 </button>
             </div>

@@ -15,7 +15,7 @@ const Row = ({rowId, changeCB, uiSelectionCB, company, title, status, app_apply,
     }
 
     return (
-        <div className={"flex w-screen justify-center h-7"}>
+        <div className={"flex grow justify-center h-7"}>
             <TextEntry name={"company"} value={company} changeCB={handleChange}/>
             <TextEntry name={"title"} value={title} changeCB={handleChange}/>
             <DateEntry name={"application_date"} value={app_apply} changeCB={handleChange}/>

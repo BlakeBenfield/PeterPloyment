@@ -78,6 +78,27 @@ const Table = ({id}) => {
         });
     }
 
+    const TableControlsFooter = () => {
+        const addRow = async () => {
+            await fetch(`http://localhost:3000/table/${id}/entry`, {
+                method: "POST",
+                headers: [["Content-Type", "application/json"]],
+                body: `{\"table_id\":${id}}`
+            });
+            await getData();
+        }
+
+        return (
+            <div className={"flex w-full items-center"}>
+                <div className={"flex flex-row items-start"} onClick={addRow}>
+                    <AddIcon className={"fill-white w-7 h-7"}/>
+                    <p> Add a new row</p>
+                </div>
+            </div>
+        );
+
+    }
+
     return (
         <div className={"flex items-center justify-center w-screen"}>
             <div className={"text-white flex flex-col w-4/5"}>
@@ -85,7 +106,6 @@ const Table = ({id}) => {
                 <p>Color: {tableData.color}</p>
                 {tableData.entries.map((entry, index) => {
                 return (
-                    <div className={"flex row justify-start"}>
                         <Row
                          rowId={index}
                          changeCB={onChange}
@@ -101,10 +121,9 @@ const Table = ({id}) => {
                          id={entry.id}
                          currSelection={tableData.currSelection}
                          />
-                        <AddIcon className={"w-5 h-5"} />
-                    </div>
                         )
             })}
+                <TableControlsFooter />
             </div>
         </div>
     )

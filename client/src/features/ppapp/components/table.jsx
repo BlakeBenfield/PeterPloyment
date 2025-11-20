@@ -10,33 +10,54 @@ const Table = ({id}) => {
     const tableRef = useRef({});
 
     const getData = async () => {
+        if (pendingSaves.current.length > 0) await saveChanges();
         const result = await fetch(`http://localhost:3000/table/${id}`);
         const table = await result.json();
+        sortRows(table.entries);
         setTableData({name: table.name, color: table.color, id: table.id, entries: table.entries, currSelection: {rowId: -1, name: ""}});
+    }
+
+    const sortRows = (rows) => {
+        rows.sort((a, b) => {
+            if (a.company === b.company) {
+                if (a.title === b.title) return a.id >= b.id ? -1 : 1;
+                if (!a.title) return 1;
+                if (!b.title) return -1;
+                return a.title.toLowerCase() >= b.title.toLowerCase() ? 1 : -1;
+            } else {
+                if (!a.company) return 1;
+                if (!b.company) return -1;
+                return a.company.toLowerCase() >= b.company.toLowerCase() ? 1 : -1;
+            }
+        })
+    }
+
+    const saveChanges = async () => {
+        try {
+            let queue = pendingSaves.current;
+            pendingSaves.current = [];
+            if (queue.length < 1) return;
+            for (let i = 0; i < queue.length; i++) {
+                let updatedObj = JSON.stringify(tableRef.current.entries.find(n => n.id === queue[i]), (key, value) => {
+                    if (value === '') return null;
+                    return value;
+                });
+
+                const result = await fetch(`http://localhost:3000/table/${id}/entry/${queue[i]}`, {
+                    method: "PUT",
+                    body: updatedObj,
+                    headers: [["Content-Type", "application/json"]]
+                });
+            }
+        } catch (e) { console.log(e); }
     }
 
     const startSaveLoop = () => {
         // TODO check if item fails, try 3 times, prompt user afterwards, NOT ON 400 res, client fault (eg. updated date by
         const interval = setInterval(async () => {
-            try {
-                let queue = pendingSaves.current;
-                pendingSaves.current = [];
-                if (queue.length < 1) return;
-                for (let i = 0; i < queue.length; i++) {
-                    let updatedObj = JSON.stringify(tableRef.current.entries[queue[i].rowId], (key, value) => {
-                        if (value === '') return null;
-                        return value;
-                    });
+            await saveChanges();
 
-                    const result = await fetch(`http://localhost:3000/table/${id}/entry/${queue[i].id}`, {
-                        method: "PUT",
-                        body: updatedObj,
-                        headers: [["Content-Type", "application/json"]]
-                    });
-                }
-            } catch (e) { console.log(e); }
-
-        }, 1000); //TODO change to 5 seconds, ask before unload if unsaved changes
+        }, 5000); //TODO change to 5 seconds, ask before unload if unsaved changes
 
         return () => clearInterval(interval);
     }
@@ -65,8 +86,8 @@ const Table = ({id}) => {
             }
         });
 
-        if (pendingSaves.current.find(n => n.rowId === rowId)) return;
-        pendingSaves.current.push({id: id, rowId: rowId});
+        if (pendingSaves.current.find(n => n.id === id)) return;
+        pendingSaves.current.push(id);
     }
 
     const onMenuSelection = (rowId, name) => {
@@ -88,7 +109,6 @@ const Table = ({id}) => {
     }
 
     const deleteRow = async (e) => {
-        console.log(e.target.entryId);
         await fetch(`http://localhost:3000/table/${id}/entry/${e.target.entryId}`, {
             method: "DELETE"
         });
@@ -116,14 +136,16 @@ const Table = ({id}) => {
             <TrashIcon className={className} onClick={handleClick}/>
         )
     }
+
     return (
         <div className={"flex items-center justify-center w-screen"}>
             <div className={"text-white flex flex-col w-4/5"}>
-                <p>Name: {tableData.name}</p>
+                <p>
+                    Name: {tableData.name}</p>
                 <p>Color: {tableData.color}</p>
                 {tableData.entries.map((entry, index) => {
                 return (
-                    <div className={"flex row justify-start"}>
+                    <div className={"flex row justify-start"} key={entry.id}>
                         <Row
                          rowId={index}
                          changeCB={onChange}

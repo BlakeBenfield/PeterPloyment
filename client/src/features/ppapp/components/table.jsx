@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import {useRef} from "react";
 import AddIcon from '../../../assets/add.svg?react'
 import TrashIcon from '../../../assets/trash.svg?react'
+import TextEntry from "./row/components/text-entry.jsx";
 
 const Table = ({className, id}) => {
     const [tableData, setTableData] = useState({name: "", id:-1, color: "", currSelection: {rowId: -1, name: ""}, entries: []});
@@ -142,9 +143,19 @@ const Table = ({className, id}) => {
         )
     }
 
+    //TODO DRY exists for a reason
     return (
         <div className={"flex items-center justify-center w-full"}>
             <div className={"text-white flex flex-col w-full"}>
+                <div className={"flex justify-start h-7"}>
+                    <TextEntry className={"text-center font-bold text-[min(1.75cqw, var(--text-lg))]"} value={"Company"}/>
+                    <TextEntry className={"text-center font-bold text-[min(1.75cqw, var(--text-lg))]"} value={"Title"}/>
+                    <TextEntry className={"text-center font-bold text-[min(1.75cqw, var(--text-lg))]"} value={"Date Applied"}/>
+                    <TextEntry className={"text-center font-bold text-[min(1.75cqw, var(--text-lg))]"} value={"Date Opened"}/>
+                    <TextEntry className={"text-center font-bold text-[min(1.75cqw, var(--text-lg))]"} value={"Date Closed"}/>
+                    <TextEntry className={"text-center font-bold text-[min(1.75cqw, var(--text-lg))]"} value={"Status"}/>
+                    <TextEntry className={"text-center font-bold text-[min(1.75cqw, var(--text-lg))]"} value={"Preference"}/>
+                </div>
                 {tableData.entries.map((entry, index) => {
                 return (
                     <div className={"flex row justify-start"} key={entry.id}>

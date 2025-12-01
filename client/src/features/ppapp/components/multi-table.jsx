@@ -69,10 +69,10 @@ const MultiTable = () => {
 
     return (
         <div className={"w-screen flex flex-col justify-start items-center"}>
-            <div className={"flex w-4/5"}>
+            <div className={"flex w-[85%]"}>
                 <Tabs />
             </div>
-            <div className={"z-100 w-4/5 -mt-0.5"}>
+            <div className={"z-100 w-[85%] -mt-0.5"}>
                 <Table id={tableSelection} />
             </div>
         </div>

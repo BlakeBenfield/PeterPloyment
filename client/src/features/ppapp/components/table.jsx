@@ -4,7 +4,7 @@ import {useRef} from "react";
 import AddIcon from '../../../assets/add.svg?react'
 import TrashIcon from '../../../assets/trash.svg?react'
 
-const Table = ({id}) => {
+const Table = ({className, id}) => {
     const [tableData, setTableData] = useState({name: "", id:-1, color: "", currSelection: {rowId: -1, name: ""}, entries: []});
     const pendingSaves = useRef([]);
     const tableRef = useRef({});
@@ -61,6 +61,10 @@ const Table = ({id}) => {
 
         return () => clearInterval(interval);
     }
+
+    useEffect(() => {
+        getData();
+    }, [id]);
 
     useEffect(() => {
         tableRef.current = tableData;
@@ -138,11 +142,8 @@ const Table = ({id}) => {
     }
 
     return (
-        <div className={"flex items-center justify-center w-screen"}>
-            <div className={"text-white flex flex-col w-4/5"}>
-                <p>
-                    Name: {tableData.name}</p>
-                <p>Color: {tableData.color}</p>
+        <div className={"flex items-center justify-center w-full"}>
+            <div className={"text-white flex flex-col w-full"}>
                 {tableData.entries.map((entry, index) => {
                 return (
                     <div className={"flex row justify-start"} key={entry.id}>
@@ -161,7 +162,7 @@ const Table = ({id}) => {
                          id={entry.id}
                          currSelection={tableData.currSelection}
                          />
-                        <TrashButtonIcon className={"w-5 h-5"} entryId={entry.id} CB={deleteRow}/>
+                        <TrashButtonIcon className={"w-5 h-5 shrink-0"} entryId={entry.id} CB={deleteRow}/>
                     </div>
                         )
             })}

@@ -43,7 +43,7 @@ const Table = ({className, id}) => {
                     return value;
                 });
 
-                const result = await fetch(`http://localhost:3000/table/${id}/entry/${queue[i]}`, {
+                const result = await fetch(`http://localhost:3000/table/${tableRef.current.id}/entry/${queue[i]}`, {
                     method: "PUT",
                     body: updatedObj,
                     headers: [["Content-Type", "application/json"]]
@@ -57,9 +57,12 @@ const Table = ({className, id}) => {
         const interval = setInterval(async () => {
             await saveChanges();
 
-        }, 5000); //TODO change to 5 seconds, ask before unload if unsaved changes
+        }, 1000);
 
-        return () => clearInterval(interval);
+        return () => {
+            clearInterval(interval);
+            saveChanges();
+        }
     }
 
     useEffect(() => {
@@ -71,9 +74,7 @@ const Table = ({className, id}) => {
     }, [tableData])
 
     useEffect( () => {
-        getData();
-        startSaveLoop();
-
+        return startSaveLoop();
     }, []);
 
     const onChange = (id, rowId, name, newValue) => {
@@ -90,7 +91,7 @@ const Table = ({className, id}) => {
             }
         });
 
-        if (pendingSaves.current.find(n => n.id === id)) return;
+        if (pendingSaves.current.includes(id)) return;
         pendingSaves.current.push(id);
     }
 

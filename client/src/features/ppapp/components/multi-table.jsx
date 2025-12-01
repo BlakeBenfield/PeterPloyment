@@ -20,14 +20,22 @@ const MultiTable = () => {
         setTableSelection(id);
     }
 
+    //TODO Have text 'autofit' to tab. Some inspiration: https://sentry.engineering/blog/perfectly-fitting-text-to-container-in-react
     const Tab = ({className, tableId, includeOverlap, zIndex, text}) => {
-        let fittedText = text;
-        if (text.length > 8) fittedText = text.substring(0, 5) + '...';
-        if (tableSelection === tableId) zIndex += 50;
+        if (tableSelection === tableId) zIndex += 10;
+
+        const handleMouseEnter = (e) => {
+            if (e.currentTarget.scrollWidth > e.currentTarget.clientWidth) {
+                e.currentTarget.title = text;
+            } else {
+                e.removeAttribute("title");
+            }
+        }
+
         return (
-            <div className={`relative w-[var(--tabWidth)] cursor-pointer ${includeOverlap ? "-ml-[calc(var(--tabWidth)*0.22)]" : ""}`} onClick={() => handleTabSelect(tableId)} style={{zIndex: zIndex}}>
-                <div className={"absolute w-full h-full flex flex-col items-center"}>
-                    <p className={"text-white"} style={{zIndex: zIndex+1}}>{fittedText}</p>
+            <div className={`flex flex-col items-center relative w-[var(--tabWidth)] h-[var(--tabHeight)] cursor-pointer ${includeOverlap ? "-ml-[var(--tabOverlap)]" : ""}`} onClick={() => handleTabSelect(tableId)} style={{zIndex: zIndex}}>
+                <div className={"absolute w-3/5 h-full flex flex-col items-center justify-center"}>
+                    <p className={"text-white truncate w-full text-center"} style={{zIndex: zIndex+1}} onMouseEnter={handleMouseEnter}>{text}</p>
                 </div>
                 <TabSVG className={`${className}  stroke-fieldRing fill-fieldColor w-full h-full`}/>
             </div>
@@ -35,8 +43,15 @@ const MultiTable = () => {
     }
 
     const Tabs = () => {
+        const numTabs = Math.max(tables.length, 4);
+        const overlapRatio = 0.22;
         return (
-            <div className={"flex w-full h-full"}>
+            <div className={"flex w-full h-full"}
+            style={{
+                "--tabWidth": `min(calc((100% - 5*0.25rem)/(${numTabs} - ${overlapRatio}*${numTabs - 1})), 15rem)`,
+                "--tabHeight": "2rem",
+                "--tabOverlap": `calc(var(--tabWidth)*${overlapRatio}`
+            }}>
                 {tables.map((table, index) => {
                     if (index === 0) {
                         return (
@@ -57,7 +72,7 @@ const MultiTable = () => {
             <div className={"flex w-4/5"}>
                 <Tabs />
             </div>
-            <div className={"z-9 w-4/5"}>
+            <div className={"z-100 w-4/5 -mt-0.5"}>
                 <Table id={tableSelection} />
             </div>
         </div>

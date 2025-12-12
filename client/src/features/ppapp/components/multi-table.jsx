@@ -21,8 +21,9 @@ const MultiTable = () => {
     }
 
     //TODO Have text 'autofit' to tab. Some inspiration: https://sentry.engineering/blog/perfectly-fitting-text-to-container-in-react
-    const Tab = ({className, tableId, includeOverlap, zIndex, text}) => {
+    const Tab = ({className, tableId, includeOverlap, zIndex, text, color}) => {
         if (tableSelection === tableId) zIndex += 10;
+        console.log(color)
 
         const handleMouseEnter = (e) => {
             if (e.currentTarget.scrollWidth > e.currentTarget.clientWidth) {
@@ -33,11 +34,12 @@ const MultiTable = () => {
         }
 
         return (
-            <div className={`flex flex-col items-center relative w-[var(--tabWidth)] h-[var(--tabHeight)] cursor-pointer ${includeOverlap ? "-ml-[var(--tabOverlap)]" : ""}`} onClick={() => handleTabSelect(tableId)} style={{zIndex: zIndex}}>
+            <div className={`flex flex-col items-center relative w-[var(--tabWidth)] h-[var(--tabHeight)] cursor-pointer ${includeOverlap ? "-ml-[var(--tabOverlap)]" : ""}`} onClick={() => handleTabSelect(tableId)}
+                 style={{zIndex: zIndex, "--tabColor": color}}>
                 <div className={"absolute w-3/5 h-full flex flex-col items-center justify-center"}>
                     <p className={"text-white truncate w-full text-center"} style={{zIndex: zIndex+1}} onMouseEnter={handleMouseEnter}>{text}</p>
                 </div>
-                <TabSVG className={`${className}  stroke-fieldRing fill-fieldColor w-full h-full`}/>
+                <TabSVG className={`${className} stroke-[var(--tabColor)] fill-fieldColor w-full h-full`}/>
             </div>
         )
     }
@@ -53,15 +55,9 @@ const MultiTable = () => {
                 "--tabOverlap": `calc(var(--tabWidth)*${overlapRatio}`
             }}>
                 {tables.map((table, index) => {
-                    if (index === 0) {
-                        return (
-                            <Tab includeOverlap={false} tableId={table.id} zIndex={8 - index} text={table.name}/>
-                        )
-                    } else {
-                        return (
-                            <Tab includeOverlap={true} tableId={table.id} zIndex={8 - index} text={table.name}/>
-                        )
-                    }
+                    return (
+                        <Tab includeOverlap={index !== 0} tableId={table.id} zIndex={8 - index} text={table.name} color={table.color}/>
+                    )
                     })}
                 <p>TODO add edit button to add tables, remove tables, and rename tables</p>
             </div>

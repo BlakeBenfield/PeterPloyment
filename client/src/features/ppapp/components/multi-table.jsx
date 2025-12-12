@@ -28,7 +28,7 @@ const MultiTable = () => {
             if (e.currentTarget.scrollWidth > e.currentTarget.clientWidth) {
                 e.currentTarget.title = text;
             } else {
-                e.removeAttribute("title");
+                e.currentTarget.removeAttribute("title");
             }
         }
 
@@ -48,7 +48,7 @@ const MultiTable = () => {
         return (
             <div className={"flex w-full h-full"}
             style={{
-                "--tabWidth": `min(calc((100% - 5*0.25rem)/(${numTabs} - ${overlapRatio}*${numTabs - 1})), 15rem)`,
+                "--tabWidth": `min(calc((100% - ((5 + 8)*0.25rem))/(${numTabs} - ${overlapRatio}*${numTabs - 1})), 15rem)`,
                 "--tabHeight": "2rem",
                 "--tabOverlap": `calc(var(--tabWidth)*${overlapRatio}`
             }}>
@@ -63,6 +63,7 @@ const MultiTable = () => {
                         )
                     }
                     })}
+                <p>TODO add edit button to add tables, remove tables, and rename tables</p>
             </div>
         )
     }

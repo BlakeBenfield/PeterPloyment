@@ -7,10 +7,12 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "moveToServer": "nodemon --exec 'bash ./mts.sh' --ext jsx,css,js --ignore dist/"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",
+    "@uiw/react-color": "^2.9.2",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.5",

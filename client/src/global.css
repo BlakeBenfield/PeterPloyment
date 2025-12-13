@@ -12,3 +12,14 @@ body {
     --color-errorRing: #ff3333;
     --cellWidth: max(calc((85vw - 13 * 0.25rem) / 7), 5rem);
 }
+
+.w-color-sketch {
+    --sketch-background: #232323 !important;
+    --sketch-box-shadow: #000000 0 0 2px 1px !important;
+    --sketch-swatch-border-top: 1px solid #444 !important;
+}
+
+.w-color-editable-input {
+    --editable-input-color: #eaeaea !important;
+    --editable-input-label-color: #9aa0a6 !important;
+}

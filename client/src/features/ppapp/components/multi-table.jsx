@@ -1,76 +1,158 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useRef} from "react";
 import Table from "./table.jsx";
-import TabSVG from '../../../assets/tab.svg?react'
+import EditSVG from '../../../assets/edit.svg?react'
+import Tab from "./row/tab.jsx";
+import Sketch from '@uiw/react-color-sketch';
 
 const MultiTable = () => {
     const [tables, setTables] = useState([]);
     const [tableSelection, setTableSelection] = useState(-1);
+    const [editMode, setEditMode] = useState(false);
+    const [colorUIPos, setColorUIPos] = useState({x: 0, y:0});
+    const [colorUISelection, setColorUISelection] = useState(-1);
+    const [colorUIVisible, setColorUIVisible] = useState(false);
+    const [color, setColor] = useState({h: 0, s: 0, v: 0, a:1});
+    const pendingSaves = useRef([]);
+    const tablesRef = useRef({});
 
-    const init = async () => {
+    const numTabs = Math.max(tables.length, 4);
+    const overlapRatio = 0.22;
+
+    useEffect(() => {
+        getData();
+        startSaveLoop();
+    }, []);
+
+    useEffect(() => {
+        tablesRef.current = tables;
+    }, [tables])
+
+    const getData = async () => {
         const response = await fetch("http://localhost:3000/tables");
         const tables = await response.json();
         setTables(tables);
         if (tables.length > 0) setTableSelection(tables[0].id);
     }
-    useEffect(() => {
-        init();
-    }, []);
+
+    const saveChanges = async () => {
+        try {
+            let queue = pendingSaves.current;
+            pendingSaves.current = [];
+            if (queue.length < 1) return;
+            for (let i = 0; i < queue.length; i++) {
+                let table = tablesRef.current.find(n => n.id === queue[i])
+                let updatedObj = JSON.stringify(table);
+
+                const result = await fetch(`http://localhost:3000/table/${table.id}`, {
+                    method: "PUT",
+                    body: updatedObj,
+                    headers: [["Content-Type", "application/json"]]
+                });
+            }
+        } catch (e) { console.log(e); }
+    }
+
+    const startSaveLoop = () => {
+        // TODO check if item fails, try 3 times, prompt user afterwards, NOT ON 400 res, client fault
+        const interval = setInterval(async () => {
+            await saveChanges();
+
+        }, 1000);
+
+        return () => {
+            clearInterval(interval);
+            saveChanges();
+        }
+    }
 
     const handleTabSelect = (id) => {
+        if (editMode) return;
         setTableSelection(id);
     }
 
-    //TODO Have text 'autofit' to tab. Some inspiration: https://sentry.engineering/blog/perfectly-fitting-text-to-container-in-react
-    const Tab = ({className, tableId, includeOverlap, zIndex, text, color}) => {
-        if (tableSelection === tableId) zIndex += 10;
-        console.log(color)
+    const handleTabChange = (e) => {
+        setTables(prev => {
+            let tableIndex = -1;
+            let table = prev.find((element, index) => {
+                if (element.id == e.target.id) { // The one time I like type coercion
+                    tableIndex = index;
+                    return true;
+                }
+            });
 
-        const handleMouseEnter = (e) => {
-            if (e.currentTarget.scrollWidth > e.currentTarget.clientWidth) {
-                e.currentTarget.title = text;
-            } else {
-                e.currentTarget.removeAttribute("title");
+            if (tableIndex === -1) return prev;
+
+            let newTables = [...prev];
+            newTables[tableIndex] = {...table, [e.target.name]: e.target.value};
+
+            if (!pendingSaves.current.includes(e.target.id)) {
+                pendingSaves.current.push(e.target.id);
             }
-        }
-
-        return (
-            <div className={`flex flex-col items-center relative w-[var(--tabWidth)] h-[var(--tabHeight)] cursor-pointer ${includeOverlap ? "-ml-[var(--tabOverlap)]" : ""}`} onClick={() => handleTabSelect(tableId)}
-                 style={{zIndex: zIndex, "--tabColor": color}}>
-                <div className={"absolute w-3/5 h-full flex flex-col items-center justify-center"}>
-                    <p className={"text-white truncate w-full text-center"} style={{zIndex: zIndex+1}} onMouseEnter={handleMouseEnter}>{text}</p>
-                </div>
-                <TabSVG className={`${className} stroke-[var(--tabColor)] fill-fieldColor w-full h-full`}/>
-            </div>
-        )
+            return newTables;
+        });
     }
 
-    const Tabs = () => {
-        const numTabs = Math.max(tables.length, 4);
-        const overlapRatio = 0.22;
-        return (
-            <div className={"flex w-full h-full"}
-            style={{
-                "--tabWidth": `min(calc((100% - ((5 + 8)*0.25rem))/(${numTabs} - ${overlapRatio}*${numTabs - 1})), 15rem)`,
-                "--tabHeight": "2rem",
-                "--tabOverlap": `calc(var(--tabWidth)*${overlapRatio}`
-            }}>
-                {tables.map((table, index) => {
-                    return (
-                        <Tab includeOverlap={index !== 0} tableId={table.id} zIndex={8 - index} text={table.name} color={table.color}/>
-                    )
-                    })}
-                <p>TODO add edit button to add tables, remove tables, and rename tables</p>
-            </div>
-        )
+    const handleTableEditToggle = () => {
+        setEditMode(prev => {
+            return !prev;
+        });
+        setColorUIVisible(false);
+
+    }
+
+    const handleColorUI = (e, id) => {
+        setColorUIPos({x: e.clientX, y: e.clientY + 15});
+        if (colorUISelection === -1 || colorUISelection === id) {
+            setColorUIVisible(prev => { return !prev});
+        }
+        setColorUISelection(id);
+
+        setColor(tables.find(value => value.id === id).color);
+
+    }
+
+    const handleColorChange = (color) => {
+        setColor(color.hex);
+        (tables.find(value => value.id === colorUISelection)).color = color.hex;
+        let event = {target: {id: colorUISelection, name: "color", value: color.hex}};
+        handleTabChange(event);
     }
 
     return (
         <div className={"w-screen flex flex-col justify-start items-center"}>
             <div className={"flex w-[85%]"}>
-                <Tabs />
+                <div className={"flex w-full h-full"}
+                     style={{
+                         "--tabWidth": `min(calc((100% - ((5 + 8)*0.25rem))/(${numTabs} - ${overlapRatio}*${numTabs - 1})), 15rem)`,
+                         "--tabHeight": "2rem",
+                         "--tabOverlap": `calc(var(--tabWidth)*${overlapRatio}`
+                     }}>
+                    {tables.map((table, index) => {
+                        return (
+                            <Tab key={table.id}
+                                 includeOverlap={index !== 0}
+                                 tableId={table.id}
+                                 zIndex={8 - index}
+                                 text={table.name}
+                                 color={table.color}
+                                 colorUIEnabled={index === 0}
+                                 tableSelection={tableSelection}
+                                 editMode={editMode}
+                                 handleChangeCB={handleTabChange}
+                                 handleTabSelectCB={handleTabSelect}
+                                 handleColorSelectCB={handleColorUI}/>
+                        )
+                    })}
+                    <div className={"cursor-pointer w-6"} onClick={handleTableEditToggle}>
+                        <EditSVG className={"fill-white"}/>
+                    </div>
+                </div>
             </div>
-            <div className={"z-100 w-[85%] -mt-0.5"}>
+            <div className={"z-30 w-[85%] -mt-0.5"}>
                 <Table id={tableSelection} />
+            </div>
+            <div className={`fixed z-50 ${colorUIVisible ? '' : 'hidden'} `} style={{left: colorUIPos.x, top: colorUIPos.y}}>
+                <Sketch color={color} disableAlpha={true} onChange={handleColorChange}/>
             </div>
         </div>
     );

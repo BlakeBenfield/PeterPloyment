@@ -54,7 +54,7 @@ const Table = ({className, id}) => {
     }
 
     const startSaveLoop = () => {
-        // TODO check if item fails, try 3 times, prompt user afterwards, NOT ON 400 res, client fault (eg. updated date by
+        // TODO check if item fails, try 3 times, prompt user afterwards, NOT ON 400 res, client fault
         const interval = setInterval(async () => {
             await saveChanges();
 

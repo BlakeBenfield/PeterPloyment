@@ -1,6 +1,7 @@
 import MultiTable from "./components/multi-table.jsx";
 import {useEffect} from "react";
 import {useNavigate} from "react-router-dom";
+import Navbar from "./components/navbar.jsx";
 
 const Ppapp = () => {
     const navigate = useNavigate();
@@ -14,8 +15,8 @@ const Ppapp = () => {
     }, []);
 
     return (
-        <div>
-            <NavBar />
+        <div className={"w-full h-full flex flex-col"}>
+            <Navbar />
             <MultiTable />
         </div>
     )

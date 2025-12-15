@@ -46,9 +46,12 @@ const Signup = () => {
             setStatusMessage("Invalid username or password");
             setStatusVisible(true);
             setIsStatusError(true);
+        } else {
+            setStatusMessage("Successfully logged in! Redirecting...");
+            setStatusVisible(true);
+            setIsStatusError(false);
+            navigate("/app", { replace: true });
         }
-
-        setTimeout(() => navigate("/login"), 3000)
     }
 
     // 'inspired' by Mayank Shukla https://stackoverflow.com/questions/43638938/updating-an-object-with-setstate-in-react

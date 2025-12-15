@@ -59,7 +59,7 @@ const Signup = () => {
         setStatusVisible(true);
         setIsStatusError(!response.ok);
 
-        setTimeout(() => navigate("/login"), 3000)
+        setTimeout(() => navigate("/login", { replace: true }), 3000)
     }
 
     // 'inspired' by Mayank Shukla https://stackoverflow.com/questions/43638938/updating-an-object-with-setstate-in-react

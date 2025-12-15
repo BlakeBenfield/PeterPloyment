@@ -40,7 +40,7 @@ const MultiTable = () => {
             pendingSaves.current = [];
             if (queue.length < 1) return;
             for (let i = 0; i < queue.length; i++) {
-                let table = tablesRef.current.find(n => n.id === queue[i])
+                let table = tablesRef.current.find(n => n.id == queue[i])
                 let updatedObj = JSON.stringify(table);
 
                 const result = await fetch(`http://localhost:3000/table/${table.id}`, {

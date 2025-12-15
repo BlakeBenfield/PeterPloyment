@@ -1,9 +1,9 @@
-import Row from "./row/row.jsx";
+import Row from "./components/row.jsx";
 import {useEffect, useState} from "react";
 import {useRef} from "react";
 import AddIcon from '../../../assets/add.svg?react'
 import TrashIcon from '../../../assets/trash.svg?react'
-import TextEntry from "./row/components/text-entry.jsx";
+import TextEntry from "./components/components/text-entry.jsx";
 
 const Table = ({className, id}) => {
     const [tableData, setTableData] = useState({name: "", id:-1, color: "", currSelection: {rowId: -1, name: ""}, entries: []});

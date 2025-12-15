@@ -1,7 +1,7 @@
 import {useState, useEffect, useRef} from "react";
 import Table from "./table.jsx";
 import EditSVG from '../../../assets/edit.svg?react'
-import Tab from "./row/tab.jsx";
+import Tab from "./components/tab.jsx";
 import Sketch from '@uiw/react-color-sketch';
 
 const MultiTable = () => {

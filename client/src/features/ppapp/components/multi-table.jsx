@@ -3,6 +3,7 @@ import Table from "./table.jsx";
 import EditSVG from '../../../assets/edit.svg?react'
 import Tab from "./components/tab.jsx";
 import Sketch from '@uiw/react-color-sketch';
+import TableAddSVG from '../../../assets/tableadd.svg?react'
 
 const MultiTable = () => {
     const [tables, setTables] = useState([]);
@@ -118,6 +119,29 @@ const MultiTable = () => {
         handleTabChange(event);
     }
 
+    const handleTableDelete = async (id, name) => {
+        //TODO make in-app window
+        const ok = window.confirm(`Are you sure you want to delete table ${name}? This CANNOT be undone`);
+        if (!ok) return;
+
+        const result = await fetch(`http://localhost:3000/table/${id}`, {
+            method: "DELETE"
+        });
+
+        getData();
+    }
+
+    const handleTableAdd = async () => {
+        //TODO On max tables, notify user
+        const result = await fetch(`http://localhost:3000/table`, {
+            method: "POST",
+            body: "{}",
+            headers: [["Content-Type", "application/json"]]
+        });
+
+        getData();
+    }
+
     return (
         <div className={"w-screen flex flex-col justify-start items-center"}>
             <div className={"flex w-[85%]"}>
@@ -140,11 +164,14 @@ const MultiTable = () => {
                                  editMode={editMode}
                                  handleChangeCB={handleTabChange}
                                  handleTabSelectCB={handleTabSelect}
-                                 handleColorSelectCB={handleColorUI}/>
+                                 handleColorSelectCB={handleColorUI}
+                                 handleTableDeleteCB={handleTableDelete}
+                            />
                         )
                     })}
-                    <div className={"cursor-pointer w-6"} onClick={handleTableEditToggle}>
-                        <EditSVG className={"fill-white"}/>
+                    <div className={"flex"} >
+                        <TableAddSVG className={`w-6 ${editMode ? '' : 'hidden'} fill-white `} onClick={handleTableAdd}/>
+                        <EditSVG className={"w-6 cursor-pointer fill-white"} onClick={handleTableEditToggle}/>
                     </div>
                 </div>
             </div>

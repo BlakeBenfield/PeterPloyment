@@ -7,8 +7,10 @@ const Home = () => {
 
     return (
         <div className={"flex justify-center items-center flex-col"}>
-            <div className={"w-screen flex justify-end mr-50 mt-5"}>
+            <div className={"z-20 w-screen flex gap-5 justify-end mr-25 mt-5"}>
                 <button onClick={() => {navigate('/login')}} type={"button"} className={"text-white underline text-xl justify-self-end cursor-pointer"}>Login</button>
+                <button onClick={() => {navigate('/app')}} type={"button"} className={"text-white underline text-xl justify-self-end cursor-pointer"}>Go to app</button>
+
             </div>
             <h1 className={"text-9xl text-transparent bg-clip-text bg-gradient-to-r from-baseColor via-baseColor to-[#EC4E20]"}>
                 Peterployment

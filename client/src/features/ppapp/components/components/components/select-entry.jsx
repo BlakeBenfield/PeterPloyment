@@ -1,6 +1,6 @@
 import XIcon from '../../../../../assets/x-symbol.svg?react';
 
-const SelectEntry = ({name, value, options, isShown, changeCB, UIOpenedCB}) => {
+const SelectEntry = ({className, name, value, options, isShown, changeCB, UIOpenedCB}) => {
     const handleSelection = (e) => {
         e.target.name = e.currentTarget.name;
         e.target.value = e.currentTarget.value;
@@ -31,7 +31,7 @@ const SelectEntry = ({name, value, options, isShown, changeCB, UIOpenedCB}) => {
     return (
         <div>
             <div>
-                <button onClick={handleUIOpen} title={"Select"} className={"h-7 w-[var(--cellWidth)] flex justify-center items-center bg-fieldColor border-gray-400 border-1"}>
+                <button onClick={handleUIOpen} title={"Select"} className={`${className} h-7 w-[var(--cellWidth)] flex justify-center items-center bg-fieldColor border-gray-400 border-t border-l`}>
                     <Option value={value}/>
                 </button>
             </div>

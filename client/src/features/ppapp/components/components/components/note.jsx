@@ -1,7 +1,7 @@
 import EditNoteIcon from '../../../../../assets/editnote.svg?react'
 import XIcon from '../../../../../assets/x-symbol.svg?react'
 
-const Note = ({name, value, isShown, changeCB, UIOpenedCB}) => {
+const Note = ({className, name, value, isShown, changeCB, UIOpenedCB}) => {
     const handleUIOpen = (e) => {
         e.target.name = name;
         UIOpenedCB(e);
@@ -26,7 +26,7 @@ const Note = ({name, value, isShown, changeCB, UIOpenedCB}) => {
             </div>
             <div>
                 <button onClick={handleUIOpen} title={"Notes"}>
-                    <EditNoteIcon className={"w-8 h-7 fill-white border-gray-400 border-1 bg-fieldColor cursor-pointer"} />
+                    <EditNoteIcon className={`${className} w-8 h-7 fill-white border-gray-400 border-t border-l border-r bg-fieldColor cursor-pointer`} />
                 </button>
             </div>
         </div>

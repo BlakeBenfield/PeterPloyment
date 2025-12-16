@@ -2,7 +2,7 @@
 const TextEntry = ({className, name, value, changeCB}) => {
     return (
         <>
-            <input name={name} disabled={!changeCB} className={`text-white focus:outline-none bg-fieldColor text-lg border-gray-400 border-1 w-[var(--cellWidth)] h-7 ${className}`} type={"text"} value={value} maxLength={32} onChange={changeCB}/>
+            <input name={name} disabled={!changeCB} className={`${className} text-white focus:outline-none bg-fieldColor text-lg border-gray-400 border-t border-l w-[var(--cellWidth)] h-7`} type={"text"} value={value} maxLength={32} onChange={changeCB}/>
         </>
     );
 

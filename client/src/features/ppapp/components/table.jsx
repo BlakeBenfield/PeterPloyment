@@ -154,7 +154,7 @@ const Table = ({className, id}) => {
                     <TextEntry className={"text-center font-bold text-[min(1.75cqw, var(--text-lg))]"} value={"Date Opened"}/>
                     <TextEntry className={"text-center font-bold text-[min(1.75cqw, var(--text-lg))]"} value={"Date Closed"}/>
                     <TextEntry className={"text-center font-bold text-[min(1.75cqw, var(--text-lg))]"} value={"Status"}/>
-                    <TextEntry className={"text-center font-bold text-[min(1.75cqw, var(--text-lg))]"} value={"Preference"}/>
+                    <TextEntry className={"text-center font-bold text-[min(1.75cqw, var(--text-lg))] border-r"} value={"Preference"}/>
                 </div>
                 {tableData.entries.map((entry, index) => {
                 return (
@@ -173,6 +173,7 @@ const Table = ({className, id}) => {
                          preference={entry.preference}
                          id={entry.id}
                          currSelection={tableData.currSelection}
+                         isLast={tableData.entries.length -1 === index}
                          />
                         <TrashButtonIcon className={"w-5 h-5 shrink-0"} entryId={entry.id} CB={deleteRow}/>
                     </div>

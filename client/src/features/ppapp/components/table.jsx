@@ -12,7 +12,7 @@ const Table = ({className, id}) => {
 
     const getData = async () => {
         if (pendingSaves.current.length > 0) await saveChanges();
-        const result = await fetch(`http://localhost:3000/table/${id}`);
+        const result = await fetch(`http://peterployment.com/table/${id}`);
         const table = await result.json();
         sortRows(table.entries);
         setTableData({name: table.name, color: table.color, id: table.id, entries: table.entries, currSelection: {rowId: -1, name: ""}});
@@ -44,7 +44,7 @@ const Table = ({className, id}) => {
                     return value;
                 });
 
-                const result = await fetch(`http://localhost:3000/table/${tableRef.current.id}/entry/${queue[i]}`, {
+                const result = await fetch(`http://peterployment.com/table/${tableRef.current.id}/entry/${queue[i]}`, {
                     method: "PUT",
                     body: updatedObj,
                     headers: [["Content-Type", "application/json"]]
@@ -108,7 +108,7 @@ const Table = ({className, id}) => {
     }
 
     const addRow = async () => {
-        await fetch(`http://localhost:3000/table/${id}/entry`, {
+        await fetch(`http://peterployment.com/table/${id}/entry`, {
             method: "POST",
             headers: [["Content-Type", "application/json"]],
             body: `{\"table_id\":${id}}`
@@ -117,7 +117,7 @@ const Table = ({className, id}) => {
     }
 
     const deleteRow = async (e) => {
-        await fetch(`http://localhost:3000/table/${id}/entry/${e.target.entryId}`, {
+        await fetch(`http://peterployment.com/table/${id}/entry/${e.target.entryId}`, {
             method: "DELETE"
         });
         await getData();

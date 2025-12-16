@@ -8,7 +8,7 @@ const Ppapp = () => {
 
     useEffect(() => {
         (async () => {
-            const data = await fetch("http://localhost:3000/auth/status");
+            const data = await fetch("http://peterployment.com/auth/status");
             const isLoggedIn = (await data.json()).authenticated;
             if (!isLoggedIn) navigate("/login", { replace: true });
         })();

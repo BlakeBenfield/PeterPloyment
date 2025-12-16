@@ -79,6 +79,8 @@ const Table = ({className, id}) => {
     }, []);
 
     const onChange = (id, rowId, name, newValue) => {
+
+        //TODO causing a rerender on each change is pretty bad. Still do saves but do not reload the state.
         setTableData((prev) => {
             const newEntries = [...prev.entries];
             newEntries[rowId] = {

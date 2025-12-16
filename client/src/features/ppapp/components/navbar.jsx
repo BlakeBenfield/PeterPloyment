@@ -6,7 +6,7 @@ const NavBar = () => {
 
     return (
         <div className={"flex w-full"}>
-            <div className={"m-3 mb-5 ml-[8vw] w-1/2"}>
+            <div className={"m-3 mb-10 ml-[8vw] w-1/2"}>
                 <p className={"cursor-pointer text-5xl text-transparent bg-clip-text bg-gradient-to-r from-baseColor via-baseColor to-[#EC4E20]"} onClick={() => {navigate("/")}}>
                     Peterployment
                 </p>

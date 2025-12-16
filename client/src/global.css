@@ -5,7 +5,7 @@ body {
 }
 
 @theme {
-    --color-fieldColor: #333333;
+    --color-fieldColor: #2e2e2e;
     --color-fieldRing: #707070;
     --color-baseColor: #6736cc;
     --color-errorFill: rgba(255, 22, 22, 0.7);

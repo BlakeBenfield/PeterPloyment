@@ -1,5 +1,8 @@
-require('dotenv').config()
-const path = require('path')
+require('dotenv').config();
+const https = require('node:https');
+const http = require('node:http');
+const fs = require('fs');
+const path = require('path');
 const express = require('express');
 const app = express();
 const port = process.env.SV_PORT || 3000;
@@ -43,10 +46,23 @@ app.use(loginRouter);
 app.use(tableRouter);
 app.use(userRouter);
 
+app.set("trust proxy", 1);
+
 app.all('/{*any}', (req, res) => {
     res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
 
-app.listen(port, "0.0.0.0", () => {
+https.createServer(
+    {
+    key: fs.readFileSync("/etc/cfcerts/privatekey.pem"),
+    cert: fs.readFileSync("/etc/cfcerts/cert.pem")
+    },
+    app
+).listen(port, "0.0.0.0", () => {
     console.log(`Server listening on port ${port}`);
 });
+
+http.createServer((req, res) => {
+   res.writeHead(301, { Location: `https://peterployment.com${req.url}` }) ;
+   res.end();
+}).listen(80);

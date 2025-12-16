@@ -169,8 +169,8 @@ const MultiTable = () => {
                         )
                     })}
                     <div className={"flex"} >
-                        <TableAddSVG className={`w-6 ${editMode ? '' : 'hidden'} fill-white `} onClick={handleTableAdd}/>
-                        <EditSVG className={"w-6 cursor-pointer fill-white"} onClick={handleTableEditToggle}/>
+                        <TableAddSVG className={`w-5 cursor-pointer ${editMode ? '' : 'hidden'} fill-white `} onClick={handleTableAdd} title={"Add new table"}/>
+                        <EditSVG className={"w-6 cursor-pointer fill-white"} onClick={handleTableEditToggle} title={"Edit mode"}/>
                     </div>
                 </div>
             </div>

@@ -133,13 +133,13 @@ const Table = ({className, id}) => {
 
     }
 
-    const TrashButtonIcon = ({className, entryId, CB}) => {
+    const TrashButtonIcon = ({className, entryId, CB, title}) => {
         const handleClick = (e) => {
             e.target.entryId = entryId;
             CB(e);
         }
         return (
-            <TrashIcon className={className} onClick={handleClick}/>
+            <TrashIcon className={className} onClick={handleClick} title={title}/>
         )
     }
 
@@ -175,7 +175,7 @@ const Table = ({className, id}) => {
                          currSelection={tableData.currSelection}
                          isLast={tableData.entries.length -1 === index}
                          />
-                        <TrashButtonIcon className={"w-5 h-5 shrink-0"} entryId={entry.id} CB={deleteRow}/>
+                        <TrashButtonIcon className={"w-5 h-5 shrink-0 cursor-pointer"} entryId={entry.id} CB={deleteRow} title={"Delete row"}/>
                     </div>
                         )
             })}

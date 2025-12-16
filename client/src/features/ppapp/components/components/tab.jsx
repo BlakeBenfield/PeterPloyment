@@ -28,8 +28,8 @@ const Tab = ({className, tableId, tableSelection, includeOverlap, zIndex, text, 
             <div className={"absolute w-3/5 h-full flex flex-col items-center justify-center"}>
                 <div className={"flex justify-center"}>
                     <input name={"name"} id={tableId} value={text} readOnly={!editMode} type={"text"} className={`text-white truncate w-full text-center focus:outline-none ${editMode ? "cursor-text" : "cursor-default pointer-events-none"} `} style={{zIndex: zIndex+1}} onMouseEnter={handleMouseEnter} onChange={handleChangeCB} />
-                    <TrashIcon className={`mr-2 ml-2 ${editMode ? "" : "hidden"}`} onClick={handleTableDelete}/>
-                    <ColorWheelSVG className={`w-5 ${editMode ? "" : "hidden"}`} onClick={handleColorSelect}/>
+                    <TrashIcon className={`mr-2 ml-2 ${editMode ? "" : "hidden"}`} onClick={handleTableDelete} title={"Delete table"}/>
+                    <ColorWheelSVG className={`w-5 ${editMode ? "" : "hidden"}`} onClick={handleColorSelect} title={"Change color"}/>
                 </div>
             </div>
             <TabSVG className={`${className} stroke-[var(--tabColor)] fill-fieldColor w-full h-full`}/>

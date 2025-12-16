@@ -8,6 +8,8 @@ export default defineConfig({
   plugins: [
 	react(),
 	tailwindcss(),
-    svgr()
+    svgr({
+        svgrOptions: { titleProp: true }
+    })
 ],
 })

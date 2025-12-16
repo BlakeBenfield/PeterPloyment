@@ -15,7 +15,6 @@ const MultiTable = () => {
     const [color, setColor] = useState({h: 0, s: 0, v: 0, a:1});
     const pendingSaves = useRef([]);
     const tablesRef = useRef({});
-
     const numTabs = Math.max(tables.length, 4);
     const overlapRatio = 0.22;
 

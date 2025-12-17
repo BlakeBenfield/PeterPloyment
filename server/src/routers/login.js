@@ -30,4 +30,9 @@ router.post('/signup', async (req, res, next) => {
     }
 });
 
+router.get('/auth/status', (req, res) => {
+    if (req.user) res.json({ authenticated: true });
+    else res.json({ authenticated: false });
+});
+
 module.exports = router;

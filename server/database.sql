@@ -1,3 +1,6 @@
+CREATE DATABASE peterployment;
+USE peterployment;
+
 CREATE TABLE `entries`(
                           `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
                           `table_id` BIGINT UNSIGNED NOT NULL,
@@ -42,3 +45,6 @@ ALTER TABLE
     `tables` ADD CONSTRAINT `tables_user_id_foreign` FOREIGN KEY(`user_id`) REFERENCES `users`(`id`);
 ALTER TABLE
     `entries` ADD CONSTRAINT `entries_table_id_foreign` FOREIGN KEY(`table_id`) REFERENCES `tables`(`id`);
+
+CREATE USER 'peterployment'@'localhost' IDENTIFIED BY 'CHANGEME!';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE ON peterployment.* TO 'peterployment'@'localhost';

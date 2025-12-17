@@ -40,7 +40,8 @@ const Signup = () => {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             method: 'POST',
-            body: urlEncodedData
+            body: urlEncodedData,
+            credentials: "same-origin"
         });
         if (!response.ok) {
             setStatusMessage("Invalid username or password");

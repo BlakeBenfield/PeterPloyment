@@ -28,7 +28,9 @@ const MultiTable = () => {
     }, [tables])
 
     const getData = async () => {
-        const response = await fetch("http://peterployment.com/tables");
+        const response = await fetch("http://peterployment.com/tables", {
+            credentials: "same-origin"
+        });
         const tables = await response.json();
         setTables(tables);
         if (tables.length > 0) setTableSelection(tables[0].id);
@@ -46,7 +48,8 @@ const MultiTable = () => {
                 const result = await fetch(`http://peterployment.com/table/${table.id}`, {
                     method: "PUT",
                     body: updatedObj,
-                    headers: [["Content-Type", "application/json"]]
+                    headers: [["Content-Type", "application/json"]],
+                    credentials: "same-origin"
                 });
             }
         } catch (e) { console.log(e); }
@@ -124,7 +127,8 @@ const MultiTable = () => {
         if (!ok) return;
 
         const result = await fetch(`http://peterployment.com/table/${id}`, {
-            method: "DELETE"
+            method: "DELETE",
+            credentials: "same-origin"
         });
 
         getData();
@@ -135,7 +139,8 @@ const MultiTable = () => {
         const result = await fetch(`http://peterployment.com/table`, {
             method: "POST",
             body: "{}",
-            headers: [["Content-Type", "application/json"]]
+            headers: [["Content-Type", "application/json"]],
+            credentials: "same-origin"
         });
 
         getData();

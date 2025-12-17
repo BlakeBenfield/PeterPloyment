@@ -26,6 +26,7 @@ const sessionOptions = {
     database: "peterployment"
 };
 
+app.set("trust proxy", 1);
 app.use(helmet());
 app.use(morgan('tiny'));
 
@@ -33,7 +34,12 @@ app.use(session({
     secret: process.env.SV_SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    store: new mySQLStore(sessionOptions)
+    store: new mySQLStore(sessionOptions),
+    cookie: {
+        httpOnly: true,
+        secure: true,
+        path: '/'
+    }
 }));
 
 app.use(express.static('./public'));
@@ -46,16 +52,14 @@ app.use(loginRouter);
 app.use(tableRouter);
 app.use(userRouter);
 
-app.set("trust proxy", 1);
-
 app.all('/{*any}', (req, res) => {
     res.sendFile(path.join(__dirname, '../public', 'index.html'));
 });
 
 https.createServer(
     {
-    key: fs.readFileSync("/etc/cfcerts/privatekey.pem"),
-    cert: fs.readFileSync("/etc/cfcerts/cert.pem")
+        key: fs.readFileSync("/etc/cfcerts/privatekey.pem"),
+        cert: fs.readFileSync("/etc/cfcerts/cert.pem")
     },
     app
 ).listen(port, "0.0.0.0", () => {
@@ -63,6 +67,6 @@ https.createServer(
 });
 
 http.createServer((req, res) => {
-   res.writeHead(301, { Location: `https://peterployment.com${req.url}` }) ;
-   res.end();
+    res.writeHead(301, { Location: `https://peterployment.com${req.url}` }) ;
+    res.end();
 }).listen(80);

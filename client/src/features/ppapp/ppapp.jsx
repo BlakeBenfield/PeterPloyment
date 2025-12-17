@@ -8,7 +8,9 @@ const Ppapp = () => {
 
     useEffect(() => {
         (async () => {
-            const data = await fetch("http://peterployment.com/auth/status");
+            const data = await fetch("http://peterployment.com/auth/status", {
+                credentials: "same-origin"
+            });
             const isLoggedIn = (await data.json()).authenticated;
             if (!isLoggedIn) navigate("/login", { replace: true });
         })();

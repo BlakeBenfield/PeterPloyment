@@ -28,7 +28,7 @@ const MultiTable = () => {
     }, [tables])
 
     const getData = async () => {
-        const response = await fetch("http://peterployment.com/tables", {
+        const response = await fetch("https://peterployment.com/tables", {
             credentials: "same-origin"
         });
         const tables = await response.json();
@@ -45,7 +45,7 @@ const MultiTable = () => {
                 let table = tablesRef.current.find(n => n.id == queue[i])
                 let updatedObj = JSON.stringify(table);
 
-                const result = await fetch(`http://peterployment.com/table/${table.id}`, {
+                const result = await fetch(`https://peterployment.com/table/${table.id}`, {
                     method: "PUT",
                     body: updatedObj,
                     headers: [["Content-Type", "application/json"]],
@@ -126,7 +126,7 @@ const MultiTable = () => {
         const ok = window.confirm(`Are you sure you want to delete table ${name}? This CANNOT be undone`);
         if (!ok) return;
 
-        const result = await fetch(`http://peterployment.com/table/${id}`, {
+        const result = await fetch(`https://peterployment.com/table/${id}`, {
             method: "DELETE",
             credentials: "same-origin"
         });
@@ -136,7 +136,7 @@ const MultiTable = () => {
 
     const handleTableAdd = async () => {
         //TODO On max tables, notify user
-        const result = await fetch(`http://peterployment.com/table`, {
+        const result = await fetch(`https://peterployment.com/table`, {
             method: "POST",
             body: "{}",
             headers: [["Content-Type", "application/json"]],

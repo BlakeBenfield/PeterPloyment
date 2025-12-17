@@ -35,7 +35,7 @@ const Signup = () => {
         }
 
         const urlEncodedData = new URLSearchParams({username: formData.email, password: formData.password}).toString();
-        const response = await fetch("http://peterployment.com/login/password", {
+        const response = await fetch("https://peterployment.com/login/password", {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },

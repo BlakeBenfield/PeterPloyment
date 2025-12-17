@@ -45,7 +45,7 @@ const Signup = () => {
             return;
         }
 
-        const response = await fetch("http://peterployment.com/signup", {
+        const response = await fetch("https://peterployment.com/signup", {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'

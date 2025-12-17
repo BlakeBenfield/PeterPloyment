@@ -11,7 +11,7 @@ router.post('/login/password', passport.authenticate('local', { successRedirect:
     res.status(400).send();
 });
 
-router.post('/logout', checkAuth, (req, res, next) =>{
+router.get('/logout', checkAuth, (req, res, next) =>{
     req.logout((err)=>{
         if (err) return next(err);
         res.redirect('/');
@@ -22,8 +22,11 @@ router.post('/signup', async (req, res, next) => {
     if (!validator(req.body, 'user')) return res.status(400).json({ message: "Bad request" });
     const password_hash = await argon2.hash(req.body.password);
     try {
-        await db.query("INSERT INTO users (email, password) VALUES (?, ?)", [req.body.email, password_hash]); //TODO may return failure
+        let [results, fields] = await db.query("INSERT INTO users (email, password) VALUES (?, ?)", [req.body.email, password_hash]); //TODO may return failure
         res.status(200).json({ message: "User created successfully" });
+
+        const userId = results.insertId;
+        await db.query("INSERT INTO tables (user_id, name) VALUES (?, \"Default\")", userId);
     } catch (e) {
         if (e.code === "ER_DUP_ENTRY") return res.status(400).json({ message: "User already exists!" });
         res.status(400).json({ message: "Bad request" });

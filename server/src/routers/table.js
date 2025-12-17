@@ -118,7 +118,7 @@ router.put('/table/:id', checkAuth, async (req, res) => {
     }
 });
 
-router.delete('table/:id', checkAuth, async (req, res) => {
+router.delete('/table/:id', checkAuth, async (req, res) => {
     const [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.params.id, req.user.id]);
     if (results.length < 1) return res.status(401).send();
 

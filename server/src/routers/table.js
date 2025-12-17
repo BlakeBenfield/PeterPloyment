@@ -27,22 +27,22 @@ router.get('/table/:id', checkAuth, async (req, res) => {
             if (entry.application_open) {
                 currDate = new Date(entry.application_open);
                 entry.application_open = (String(currDate.getFullYear()).padStart(4, '0')) + '-' +
-                                         (String(currDate.getMonth() + 1).padStart(2, '0')) + '-' +
-                                         (String(currDate.getDate()).padStart(2, '0'));
+                    (String(currDate.getMonth() + 1).padStart(2, '0')) + '-' +
+                    (String(currDate.getDate()).padStart(2, '0'));
             }
 
             if (entry.application_close) {
                 currDate = new Date(entry.application_close);
                 entry.application_close = (String(currDate.getFullYear()).padStart(4, '0')) + '-' +
-                                          (String(currDate.getMonth() + 1).padStart(2, '0')) + '-' +
-                                          (String(currDate.getDate()).padStart(2, '0'));
+                    (String(currDate.getMonth() + 1).padStart(2, '0')) + '-' +
+                    (String(currDate.getDate()).padStart(2, '0'));
             }
 
             if (entry.application_date) {
                 currDate = new Date(entry.application_date);
                 entry.application_date = (String(currDate.getFullYear()).padStart(4, '0')) + '-' +
-                                         (String(currDate.getMonth() + 1).padStart(2, '0')) + '-' +
-                                         (String(currDate.getDate()).padStart(2, '0'));
+                    (String(currDate.getMonth() + 1).padStart(2, '0')) + '-' +
+                    (String(currDate.getDate()).padStart(2, '0'));
             }
             arr[index] = entry;
         });
@@ -65,7 +65,7 @@ router.post('/table', checkAuth, async (req, res) => {
     try {
         if (!validator(req.body, 'table')) return res.status(400).send();
         const [results, fields] = await db.query("SELECT * FROM tables WHERE user_id = ?", [req.user.id]); //TODO MAY RETURN FAILURE
-        if (results > 7) return res.status(400).send("Each user may only have 8 tables max!");
+        if (results.length > 7) return res.status(400).send("Each user may only have 8 tables max!");
 
         let sql = "INSERT INTO tables (user_id";
         let params = [req.user.id];
@@ -119,10 +119,10 @@ router.put('/table/:id', checkAuth, async (req, res) => {
 });
 
 router.delete('/table/:id', checkAuth, async (req, res) => {
-    const [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.params.id, req.user.id]);
+    let [results, fields] = await db.query("SELECT * FROM tables WHERE id = ? AND user_id = ?", [req.params.id, req.user.id]);
     if (results.length < 1) return res.status(401).send();
 
-    await db.query("DELETE FROM tables WHERE id = ?", [req.params.id]);
+    [results, fields] = await db.query("DELETE FROM tables WHERE id = ?", [req.params.id]); //TODO MAY RETURN FAILURE
     return res.status(200).send();
 });
 
